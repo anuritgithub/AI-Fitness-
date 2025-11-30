@@ -168,15 +168,16 @@ export default function ImageModal({ itemName, isOpen, onClose }: ImageModalProp
           {imageUrl && !loading && (
             <div className="space-y-3">
               <div className="relative w-full bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
-                <img
-                  src={imageUrl}
-                  alt={itemName}
-                  className="w-full h-auto object-contain max-h-96"
-                  onError={() => {
-                    setError('Failed to load image');
-                    setImageUrl(null);
-                  }}
-                />
+<img
+  src={imageUrl}
+  alt={itemName}
+  className="w-full h-auto object-contain" // removed max-h-96
+  onError={() => {
+    setError('Failed to load image');
+    setImageUrl(null);
+  }}
+/>
+
               </div>
 
               {/* Generation Info */}

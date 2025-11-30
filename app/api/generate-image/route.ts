@@ -15,14 +15,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { prompt, itemName, type } = body;
+  /*  const { prompt, itemName, type } = body;
 
     if (!prompt || !type) {
       return NextResponse.json(
         { success: false, error: 'Prompt and type are required' },
         { status: 400 }
       );
-    }
+    }*/
+   const { prompt, itemName, type } = body;
+const finalPrompt = prompt || itemName;
+
+if (!finalPrompt || !type) {
+  return NextResponse.json(
+    { success: false, error: 'Prompt or itemName and type are required' },
+    { status: 400 }
+  );
+}
+
 
     if (!['exercise', 'meal'].includes(type)) {
       return NextResponse.json(
@@ -31,10 +41,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_PEXELS_KEY;
 
     if (!apiKey) {
-      console.error('OPENROUTER_API_KEY not found in environment variables');
+      console.error('NEXT_PUBLIC_PEXELS_KEY not found in environment variables');
       return NextResponse.json(
         {
           success: false,

@@ -44,7 +44,7 @@ export async function generateImageWithOpenRouter(
         messages: [
           {
             role: 'user',
-            content: `Generate a realistic image: ${enhancedPrompt}`
+            content: `Generate a realistic image: ${enhancedPrompt}`,
           }
         ],
         max_tokens: 300,
@@ -54,40 +54,41 @@ export async function generateImageWithOpenRouter(
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenRouter API Error:', response.status, errorText);
-      
-      // Return a fallback placeholder image
+
+      // Return fallback Pexels image
+      const fallback = await generatePlaceholderImage(params.prompt, params.type);
+
       return {
         success: true,
-        imageUrl: generatePlaceholderImage(params.prompt, params.type),
+        imageUrl: fallback,
         prompt: enhancedPrompt,
-        model: 'placeholder',
+        model: 'pexels-placeholder',
       };
     }
 
     const data = await response.json();
 
-    // OpenRouter returns text, not image URLs directly
-    // For now, use placeholder images
-    const placeholderUrl = generatePlaceholderImage(params.prompt, params.type);
-
-    console.log(`Using placeholder image`);
+    // Still using placeholders because OpenRouter does not produce direct image URLs yet
+    const placeholderUrl = await generatePlaceholderImage(params.prompt, params.type);
 
     return {
       success: true,
       imageUrl: placeholderUrl,
       prompt: enhancedPrompt,
-      model: 'placeholder',
+      model: 'pexels-placeholder',
     };
 
   } catch (error: any) {
     console.error(`Error generating ${params.type} image:`, error.message);
-    
-    // Return placeholder on error
+
+    // Return fallback Pexels image
+    const fallback = await generatePlaceholderImage(params.prompt, params.type);
+
     return {
       success: true,
-      imageUrl: generatePlaceholderImage(params.prompt, params.type),
+      imageUrl: fallback,
       prompt: buildPrompt(params.prompt, params.type),
-      model: 'placeholder',
+      model: 'pexels-placeholder',
     };
   }
 }
@@ -117,16 +118,45 @@ function buildMealPrompt(mealName: string): string {
   Suitable for a nutrition plan guide.`;
 }
 
-// Generate placeholder image using Unsplash or similar
-function generatePlaceholderImage(itemName: string, type: 'exercise' | 'meal'): string {
-  const searchTerms = itemName
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '')
-    .trim()
-    .replace(/\s+/g, '+');
+// ------------------------
+// ❤️ NEW → PEXELS INTEGRATION
+// ------------------------
 
-  const category = type === 'exercise' ? 'fitness,gym,workout' : 'food,meal,nutrition';
+async function generatePlaceholderImage(
+  itemName: string,
+  type: 'exercise' | 'meal'
+): Promise<string> {
+  try {
+    const apiKey = process.env.NEXT_PUBLIC_PEXELS_KEY;
+    if (!apiKey) {
+      console.error("Pexels API key missing!");
+      return '/fallback.png';
+    }
 
-  // Use Unsplash API for realistic images (free, no key required)
-  return `https://source.unsplash.com/800x600/?${searchTerms},${category}`;
+    const query =
+      type === 'exercise'
+        ? `${itemName} exercise fitness gym`
+        : `${itemName} food meal nutrition`;
+
+    const response = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`,
+      {
+        headers: {
+          Authorization: apiKey,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Pexels fetch failed:", await response.text());
+      return '/fallback.png';
+    }
+
+    const data = await response.json();
+
+    return data.photos?.[0]?.src?.medium || '/fallback.png';
+  } catch (error) {
+    console.error("Pexels placeholder error:", error);
+    return '/fallback.png';
+  }
 }

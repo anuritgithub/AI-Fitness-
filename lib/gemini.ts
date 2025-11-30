@@ -682,5 +682,5 @@ function getFallbackPlan(userData: UserData) {
       `For ${userData.fitnessGoal}, maintain consistency and track your progress weekly`
     ],
     motivation: `${userData.name}, your journey to ${userData.fitnessGoal} starts now! Every rep, every meal, every choice matters. Stay committed, trust the process, and watch yourself transform into the strongest version of YOU! 💪`
-  };
+  }
 }

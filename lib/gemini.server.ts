@@ -1,3 +1,5 @@
+'use server';
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { UserData } from '@/types';
 
@@ -679,6 +681,6 @@ function getFallbackPlan(userData: UserData) {
       `As a ${userData.fitnessLevel} level athlete, focus on proper form over heavy weights to prevent injuries`,
       `For ${userData.fitnessGoal}, maintain consistency and track your progress weekly`
     ],
-    motivation: `${userData.name}, your journey to ${userData.fitnessGoal} starts now! Every rep, every meal, every choice matters. Stay committed, trust the process, and watch yourself transform into the strongest version of YOU! 💪`
+    motivation: `${userData.name}, your journey to ${userData.fitnessGoal} every small step you take today builds the foundation for a stronger, healthier tomorrow. Believe in yourself, embrace the challenge, and let your determination shine — your best version is just around the corner! 🌟`
   };
 }

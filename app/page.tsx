@@ -83,9 +83,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t mt-12">
-        <div className="container mx-auto px-4 py-6 text-center text-muted-foreground">
-          <p>Built with Next.js, Gemini AI, and ElevenLabs(optional)</p>
-        </div>
+
       </footer>
     </main>
   );

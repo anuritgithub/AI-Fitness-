@@ -10,10 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { UserData } from '@/types';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function UserForm({ onSubmit }: { onSubmit: (data: UserData) => void }) {
   const [loading, setLoading] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [formData, setFormData] = useState<UserData>({
     name: '',
     age: 25,
@@ -36,254 +36,217 @@ export default function UserForm({ onSubmit }: { onSubmit: (data: UserData) => v
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <Card
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className={`w-full border-2 shadow-2xl rounded-2xl bg-gradient-to-b from-neutral-950 to-neutral-900 text-white transition-all duration-300 ease-out ${
-          isHovered
-            ? 'border-pink-400 dark:border-pink-300 -translate-y-2 shadow-2xl shadow-pink-500/20'
-            : 'border-neutral-800 dark:border-pink-400/50'
-        }`}
-      >
-        <CardHeader className="text-center pb-2">
-          <CardTitle className={`text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 transition-all duration-300 ${
-            isHovered ? 'scale-105' : 'scale-100'
-          }`}>
+    <div className="w-full max-w-3xl mx-auto px-4 py-12">
+      <Card className="w-full bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900/90 backdrop-blur-md border border-gray-700 rounded-3xl shadow-2xl overflow-hidden">
+        
+        {/* Logo + Header */}
+        <div className="flex flex-col items-center pt-6">
+          <Image src="/logo.jpg" alt="Fitness Logo" width={80} height={80} className="rounded-full shadow-xl" />
+          <CardTitle className="text-3xl font-bold text-white mt-3 bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 text-transparent animate-gradient">
             Personal Fitness Profile
           </CardTitle>
-          <CardDescription className="text-neutral-400 dark:text-neutral-300 text-sm transition-colors duration-300">
-            Fill in your details to get your personalized AI-powered fitness plan
+          <CardDescription className="text-gray-300 mt-1 text-center">
+            Fill in your details to get a customized AI-powered fitness plan
           </CardDescription>
-        </CardHeader>
+        </div>
 
-        <CardContent className="p-6 md:p-10">
-          <form onSubmit={handleSubmit} className="space-y-8">
+        <CardContent className="p-8 md:p-10">
+          <form onSubmit={handleSubmit} className="space-y-10">
 
-            {/* Basic Info */}
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium text-neutral-300 dark:text-neutral-200">
-                  Name
-                </Label>
+            {/* Personal Info Section */}
+            <section className="space-y-6">
+              <h3 className="text-xl font-semibold text-yellow-400 border-b border-yellow-500 pb-2">Personal Info</h3>
+
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-gray-200">Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200"
                   placeholder="Enter your name"
                   required
+                  className="bg-gray-800 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-500 rounded-xl"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="age" className="text-neutral-300 dark:text-neutral-200">
-                    Age
-                  </Label>
+                <div className="space-y-3">
+                  <Label htmlFor="age" className="text-gray-200">Age</Label>
                   <Input
                     id="age"
                     type="number"
                     value={formData.age}
                     onChange={(e) => setFormData({ ...formData, age: parseInt(e.target.value) })}
-                    className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200"
                     required
+                    className="bg-gray-800 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-500 rounded-xl"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-neutral-300 dark:text-neutral-200">
-                    Gender
-                  </Label>
+                  <Label className="text-gray-200">Gender</Label>
                   <RadioGroup
                     value={formData.gender}
                     onValueChange={(value: any) => setFormData({ ...formData, gender: value })}
-                    className="flex items-center space-x-4 mt-1"
+                    className="flex items-center space-x-6 mt-1"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="male" id="male" className="border-neutral-600 dark:border-pink-400/50" />
-                      <Label htmlFor="male" className="text-neutral-300 dark:text-neutral-200">
-                        Male
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="female" id="female" className="border-neutral-600 dark:border-pink-400/50" />
-                      <Label htmlFor="female" className="text-neutral-300 dark:text-neutral-200">
-                        Female
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="other" id="other" className="border-neutral-600 dark:border-pink-400/50" />
-                      <Label htmlFor="other" className="text-neutral-300 dark:text-neutral-200">
-                        Other
-                      </Label>
-                    </div>
+                    {['male', 'female', 'other'].map((g) => (
+                      <div key={g} className="flex items-center space-x-2">
+                        <RadioGroupItem value={g} id={g} className="border-gray-500 checked:bg-yellow-400 checked:border-yellow-400" />
+                        <Label htmlFor={g} className="text-gray-200">{g.charAt(0).toUpperCase() + g.slice(1)}</Label>
+                      </div>
+                    ))}
                   </RadioGroup>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="height" className="text-neutral-300 dark:text-neutral-200">
-                    Height (cm)
-                  </Label>
+                <div className="space-y-3">
+                  <Label htmlFor="height" className="text-gray-200">Height (cm)</Label>
                   <Input
                     id="height"
                     type="number"
                     value={formData.height}
                     onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) })}
-                    className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200"
                     required
+                    className="bg-gray-800 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-500 rounded-xl"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="weight" className="text-neutral-300 dark:text-neutral-200">
-                    Weight (kg)
-                  </Label>
+                <div className="space-y-3">
+                  <Label htmlFor="weight" className="text-gray-200">Weight (kg)</Label>
                   <Input
                     id="weight"
                     type="number"
                     value={formData.weight}
                     onChange={(e) => setFormData({ ...formData, weight: parseInt(e.target.value) })}
-                    className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200"
                     required
+                    className="bg-gray-800 border-gray-600 text-white focus:ring-yellow-400 focus:border-yellow-500 rounded-xl"
                   />
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Fitness Details */}
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Fitness Goal
-                </Label>
-                <Select
-                  value={formData.fitnessGoal}
-                  onValueChange={(value: any) => setFormData({ ...formData, fitnessGoal: value })}
-                >
-                  <SelectTrigger className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-neutral-900 dark:bg-neutral-900 border-neutral-700 dark:border-pink-400/30 text-neutral-200 dark:text-white">
-                    <SelectItem value="weight-loss">Weight Loss</SelectItem>
-                    <SelectItem value="muscle-gain">Muscle Gain</SelectItem>
-                    <SelectItem value="general-fitness">General Fitness</SelectItem>
-                    <SelectItem value="endurance">Endurance</SelectItem>
-                    <SelectItem value="flexibility">Flexibility</SelectItem>
-                  </SelectContent>
-                </Select>
+            {/* Fitness Details Section */}
+            <section className="space-y-6">
+              <h3 className="text-xl font-semibold text-pink-400 border-b border-pink-500 pb-2">Fitness Preferences</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-gray-200">Fitness Goal</Label>
+                  <Select
+                    value={formData.fitnessGoal}
+                    onValueChange={(value: any) => setFormData({ ...formData, fitnessGoal: value })}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-600 text-white focus:ring-pink-400 focus:border-pink-500 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                      <SelectItem value="weight-loss">Weight Loss</SelectItem>
+                      <SelectItem value="muscle-gain">Muscle Gain</SelectItem>
+                      <SelectItem value="general-fitness">General Fitness</SelectItem>
+                      <SelectItem value="endurance">Endurance</SelectItem>
+                      <SelectItem value="flexibility">Flexibility</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-gray-200">Fitness Level</Label>
+                  <Select
+                    value={formData.fitnessLevel}
+                    onValueChange={(value: any) => setFormData({ ...formData, fitnessLevel: value })}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-600 text-white focus:ring-pink-400 focus:border-pink-500 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Current Fitness Level
-                </Label>
-                <Select
-                  value={formData.fitnessLevel}
-                  onValueChange={(value: any) => setFormData({ ...formData, fitnessLevel: value })}
-                >
-                  <SelectTrigger className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-neutral-900 dark:bg-neutral-900 border-neutral-700 dark:border-pink-400/30 text-neutral-200 dark:text-white">
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <Label className="text-gray-200">Workout Location</Label>
+                  <Select
+                    value={formData.workoutLocation}
+                    onValueChange={(value: any) => setFormData({ ...formData, workoutLocation: value })}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-600 text-white focus:ring-pink-400 focus:border-pink-500 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                      <SelectItem value="home">Home</SelectItem>
+                      <SelectItem value="gym">Gym</SelectItem>
+                      <SelectItem value="outdoor">Outdoor</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Workout Location
-                </Label>
-                <Select
-                  value={formData.workoutLocation}
-                  onValueChange={(value: any) => setFormData({ ...formData, workoutLocation: value })}
-                >
-                  <SelectTrigger className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-neutral-900 dark:bg-neutral-900 border-neutral-700 dark:border-pink-400/30 text-neutral-200 dark:text-white">
-                    <SelectItem value="home">Home</SelectItem>
-                    <SelectItem value="gym">Gym</SelectItem>
-                    <SelectItem value="outdoor">Outdoor</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="space-y-3">
+                  <Label className="text-gray-200">Dietary Preference</Label>
+                  <Select
+                    value={formData.dietaryPreference}
+                    onValueChange={(value: any) => setFormData({ ...formData, dietaryPreference: value })}
+                  >
+                    <SelectTrigger className="bg-gray-800 border-gray-600 text-white focus:ring-pink-400 focus:border-pink-500 rounded-xl">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-700 text-white">
+                      <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                      <SelectItem value="non-vegetarian">Non-Vegetarian</SelectItem>
+                      <SelectItem value="vegan">Vegan</SelectItem>
+                      <SelectItem value="keto">Keto</SelectItem>
+                      <SelectItem value="paleo">Paleo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+            </section>
 
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Dietary Preference
-                </Label>
-                <Select
-                  value={formData.dietaryPreference}
-                  onValueChange={(value: any) => setFormData({ ...formData, dietaryPreference: value })}
-                >
-                  <SelectTrigger className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-neutral-900 dark:bg-neutral-900 border-neutral-700 dark:border-pink-400/30 text-neutral-200 dark:text-white">
-                    <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                    <SelectItem value="non-vegetarian">Non-Vegetarian</SelectItem>
-                    <SelectItem value="vegan">Vegan</SelectItem>
-                    <SelectItem value="keto">Keto</SelectItem>
-                    <SelectItem value="paleo">Paleo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            {/* Optional Section */}
+            <section className="space-y-6">
+              <h3 className="text-xl font-semibold text-purple-400 border-b border-purple-500 pb-2">Optional Details</h3>
 
-            {/* Optional */}
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Medical History (Optional)
-                </Label>
+              <div className="space-y-3">
+                <Label className="text-gray-200">Medical History</Label>
                 <Textarea
-                  id="medicalHistory"
                   value={formData.medicalHistory}
                   onChange={(e) => setFormData({ ...formData, medicalHistory: e.target.value })}
                   placeholder="Any injuries, conditions, or medications..."
-                  className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200 resize-none"
+                  className="bg-gray-800 border-gray-600 text-white rounded-xl focus:ring-purple-400 focus:border-purple-500 resize-none"
+                  rows={4}
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-neutral-300 dark:text-neutral-200">
-                  Stress Level
-                </Label>
+              <div className="space-y-3">
+                <Label className="text-gray-200">Stress Level</Label>
                 <Select
                   value={formData.stressLevel}
                   onValueChange={(value: any) => setFormData({ ...formData, stressLevel: value })}
                 >
-                  <SelectTrigger className="bg-neutral-800 dark:bg-neutral-800 border-neutral-700 dark:border-pink-400/30 focus:border-pink-400 dark:focus:border-pink-300 text-neutral-200 dark:text-white focus:ring-pink-500 dark:focus:ring-pink-400 transition-all duration-200">
+                  <SelectTrigger className="bg-gray-800 border-gray-600 text-white focus:ring-purple-400 focus:border-purple-500 rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-neutral-900 dark:bg-neutral-900 border-neutral-700 dark:border-pink-400/30 text-neutral-200 dark:text-white">
+                  <SelectContent className="bg-gray-900 border-gray-700 text-white">
                     <SelectItem value="low">Low</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="high">High</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </section>
 
+            {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white hover:opacity-90 active:scale-95 transition-all duration-200 rounded-xl shadow-lg hover:shadow-xl dark:shadow-pink-500/20"
+              className="w-full py-5 text-lg font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 hover:brightness-105 rounded-2xl shadow-lg flex items-center justify-center gap-3 text-white"
               disabled={loading}
             >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Generating Your Plan...
-                </>
-              ) : (
-                '💪 Generate My Fitness Plan 🤛'
-              )}
+              {loading ? <Loader2 className="animate-spin h-5 w-5" /> : '💪 Generate My Fitness Plan'}
             </Button>
           </form>
         </CardContent>
